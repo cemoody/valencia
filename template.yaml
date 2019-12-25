@@ -46,6 +46,20 @@ Resources:
       Cors:
         AllowHeaders: '''Authorization,Content-Type'''
         AllowOrigin: '''*'''
+  Cdn:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          Compress: true
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: false
+          TargetOriginId: StackeryCDN
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        PriceClass: PriceClass_100
 Parameters:
   StackTagName:
     Type: String
