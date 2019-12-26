@@ -50,16 +50,43 @@ Resources:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
-        DefaultCacheBehavior:
-          Compress: true
-          ForwardedValues:
-            Cookies:
-              Forward: none
-            QueryString: false
-          TargetOriginId: StackeryCDN
-          ViewerProtocolPolicy: redirect-to-https
         Enabled: true
-        PriceClass: PriceClass_100
+        IPV6Enabled: true
+        CacheBehaviors:
+          - AllowedMethods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            CachedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            Compress: true
+            ForwardedValues:
+              Headers:
+                - Accept
+                - Referer
+                - Athorization
+                - Content-Type
+              QueryString: true
+            PathPattern: "/*"
+            TargetOriginId: originapi
+            ViewerProtocolPolicy: https-only
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: false
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: originapi
+        Origins:
+            - DomainName: !Sub '${Api}.execute-api.${AWS::Region}.amazonaws.com'
+              Id: originapi
+              CustomOriginConfig:
+                OriginProtocolPolicy: https-only
+              OriginPath: !Sub '/${EnvironmentTagName}'
 Parameters:
   StackTagName:
     Type: String
