@@ -1,6 +1,7 @@
 import json
 from datasette.app import Datasette
 from mangum import Mangum
+import hnswlib
 
 files = ['prod.db', 'staging.db']
 ds = Datasette(files)

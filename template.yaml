@@ -75,7 +75,7 @@ Resources:
               QueryString: true
             PathPattern: "/*"
             TargetOriginId: originapi
-            ViewerProtocolPolicy: https-only
+            ViewerProtocolPolicy: redirect-to-https
         DefaultCacheBehavior:
           ForwardedValues:
             QueryString: false
@@ -86,6 +86,10 @@ Resources:
               Id: originapi
               CustomOriginConfig:
                 OriginProtocolPolicy: https-only
+                OriginSSLProtocols: 
+                  - TLSv1.2
+                  - TLSv1.1
+                  - TLSv1
               OriginPath: !Sub '/${EnvironmentTagName}'
 Parameters:
   StackTagName:
