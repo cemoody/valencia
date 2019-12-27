@@ -1,2 +1,12 @@
 .stackery
 .aws-sam
+node_modules
+src/*/*-info/
+src/*/*/
+src/*/*.so
+src/serve/*.db
+src/serve/typing_extensions.py
+src/serve/zipp.py
+src/serve/click_default_group.py
+src/serve/LICENSE.md
+.next
