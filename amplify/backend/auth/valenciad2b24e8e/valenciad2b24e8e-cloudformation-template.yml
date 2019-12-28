@@ -9,6 +9,18 @@ Parameters:
     Type: String
   
   
+  
+  
+  functionvalenciad2b24e8eCustomMessageArn: 
+    Type: String
+    Default: functionvalenciad2b24e8eCustomMessageArn
+  
+  functionvalenciad2b24e8eCustomMessageName: 
+    Type: String
+    Default: functionvalenciad2b24e8eCustomMessageName
+  
+  
+  
 
     
   identityPoolName:
@@ -100,16 +112,10 @@ Parameters:
       
   hostedUIProviderMeta:
     Type: String
-              
-  hostedUIProviderCreds:
-    Type: String
-              
-  oAuthMetadata:
-    Type: String
                       
   userPoolGroupList:
     Type: CommaDelimitedList
-                        
+            
   parentStack:
     Type: String
                 
@@ -118,11 +124,59 @@ Parameters:
               
   dependsOn:
     Type: CommaDelimitedList
-    
+        
+  thirdPartyAuth:
+    Type: String
+                    
+  authProviders:
+    Type: CommaDelimitedList
+        
+  userPoolGroups:
+    Type: String
+              
+  adminQueries:
+    Type: String
+            
+  verificationBucketName:
+    Type: String
+              
+  facebookAppId:
+    Type: String
+              
+  googleClientId:
+    Type: String
+              
+  hostedUIProviderCreds:
+    Type: String
+              
+  oAuthMetadata:
+    Type: String
+                        
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
 
 Resources:
+  
+  CustomMessageConfirmationBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: "Retain"
+    Properties:
+      BucketName:  !If [ShouldNotCreateEnvResources, !Ref verificationBucketName, !Join ['',[!Ref verificationBucketName, '-', !Ref env]]]
+      AccessControl: "Private"
+      WebsiteConfiguration:
+        IndexDocument: "index.html"
+        ErrorDocument: "index.html"
+      CorsConfiguration:
+        CorsRules:
+          - 
+            AllowedHeaders:
+              - "Authorization" 
+              - "Content-Length"
+            AllowedMethods:
+              - "GET"
+            AllowedOrigins:
+              - "*"
+            MaxAge: 3000
   
   
   # BEGIN SNS ROLE RESOURCE
@@ -172,6 +226,19 @@ Resources:
         
       
       
+      LambdaConfig:
+        
+        
+          CustomMessage: !Ref functionvalenciad2b24e8eCustomMessageArn
+        
+        
+        
+        
+        
+        
+        
+        
+      
       
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
       
@@ -197,6 +264,15 @@ Resources:
     
   
     
+  
+  UserPoolCustomMessageLambdaInvokePermission: 
+    Type: "AWS::Lambda::Permission"
+    DependsOn: UserPool
+    Properties: 
+      Action: "lambda:invokeFunction"
+      Principal: "cognito-idp.amazonaws.com"
+      FunctionName: !Ref functionvalenciad2b24e8eCustomMessageName
+      SourceArn: !GetAtt UserPool.Arn
     
   
     
@@ -215,6 +291,9 @@ Resources:
     Properties:
       ClientName: valencd2b24e8e_app_clientWeb
       
+      ReadAttributes: !Ref userpoolClientReadAttributes
+      WriteAttributes: !Ref userpoolClientWriteAttributes
+      
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
     DependsOn: UserPool
@@ -224,6 +303,9 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: valencd2b24e8e_app_client
+      
+      ReadAttributes: !Ref userpoolClientReadAttributes
+      WriteAttributes: !Ref userpoolClientWriteAttributes
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -704,6 +786,15 @@ Resources:
             - cognito-idp.${region}.amazonaws.com/${client}
             - { region: !Ref "AWS::Region",  client: !Ref UserPool}
             
+      SupportedLoginProviders: 
+        
+        graph.facebook.com: !Ref facebookAppId
+        
+        
+        accounts.google.com: !Ref googleClientId
+        
+        
+      
       AllowUnauthenticatedIdentities: !Ref allowUnauthenticatedIdentities
        
        
@@ -753,9 +844,15 @@ Outputs :
   AppClientSecret:
     Value: !GetAtt UserPoolClientInputs.appSecret
   
+  
+  GoogleWebClient:
+    Value: !Ref googleClientId
    
    
   
+  
+  FacebookWebClient:
+    Value: !Ref facebookAppId
    
    
   

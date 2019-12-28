@@ -34,9 +34,12 @@ body {
   font-family: "Roboto Mono", monospace;
   text-transform: uppercase;
   color: #ffffff;
-  font-size: 2.5em;
   letter-spacing: 0.5rem;
   vertical-align: middle;
+}
+
+.fs25 {
+  font-size: 2.5em;
 }
 
 .subtitle {
@@ -45,6 +48,17 @@ body {
   font-family: "Roboto Mono", monospace;
   color: rgba(255, 255, 255, 0.769);
   font-size: 1.25em;
+  line-height: 1.5;
+}
+
+.text {
+  margin-top: 1.25rem;
+  margin-bottom: 2.25rem;
+  font-family: "Roboto Mono", monospace;
+  color: rgba(255, 255, 255, 0.769);
+  font-size: 1em;
+  line-height: 1.5;
+  text-align: left;
 }
 
 .centered {
@@ -58,4 +72,22 @@ body {
 
 .pt1 {
   padding-top: 1rem;
+}
+
+.buttonHighlight {
+  background-color: #ffff00;
+  margin: 1em;
+  padding: 1em;
+  font-family: "Roboto Mono", monospace;
+  text-transform: uppercase;
+  color: "white";
+  width: 300px;
+  height: 45;
+  font-weight: 600;
+  font-size: 14;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  border-radius: 3;
+  box-shadow: "0px 1px 3px rgba(0, 0, 0, .3)";
 }

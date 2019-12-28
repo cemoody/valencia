@@ -14,7 +14,16 @@
         "categories": {
             "auth": {
                 "valenciad2b24e8e": {
+                    "facebookAppId": "2555421984735263",
+                    "googleClientId": "b6d2fcdbcf32b5c77463db67d2bfddef",
                     "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"2555421984735263\",\"client_secret\":\"b6d2fcdbcf32b5c77463db67d2bfddef\"},{\"ProviderName\":\"Google\",\"client_id\":\"195965189862-iq3a4tk06etfro7pfgkg4s2lkste9ubs.apps.googleusercontent.com\",\"client_secret\":\"UgKttDdqs3AJH4AgMO9jKYyV\"}]"
+                }
+            },
+            "function": {
+                "valenciad2b24e8eCustomMessage": {
+                    "EMAILMESSAGE": "",
+                    "REDIRECTURL": "https://algopipes.com/",
+                    "EMAILSUBJECT": "Confirm your algopipes email address"
                 }
             }
         }
