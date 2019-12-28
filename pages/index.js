@@ -1,6 +1,10 @@
 import React from "react";
 import Head from "next/head";
-import { Icon } from "semantic-ui-react";
+import { Icon, Button, Label } from "semantic-ui-react";
+import Amplify from "aws-amplify";
+import awsconfig from "../src/aws-exports";
+
+Amplify.configure(awsconfig);
 
 const Home = () => (
   <div>
@@ -25,9 +29,24 @@ const Home = () => (
               <Icon fitted name="cubes" size="huge" inverted />
             </span>
             <span className="title"> algopipes </span>
-            <p className="subtitle">
-              Create a search engine based on your embeddings.
-            </p>
+            <p />
+            <span className="subtitle">
+              Create a search page from your embeddings.
+              <span className="highlight"> Free. </span>
+            </span>
+            <p />
+            <p />
+            <p />
+            <div className="centered pt1">
+              <Button as="div" labelPosition="right">
+                <Button icon>
+                  <Icon name="cloud upload" />
+                </Button>
+                <Label as="a" basic pointing="left">
+                  Upload dataframe
+                </Label>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ body {
 }
 
 #inner {
-  padding: 3.5rem 2rem;
+  padding: 3.5rem 1rem;
   max-width: 100%;
 }
 
@@ -34,15 +34,28 @@ body {
   font-family: "Roboto Mono", monospace;
   text-transform: uppercase;
   color: #ffffff;
-  font-size: 3em;
+  font-size: 2.5em;
   letter-spacing: 0.5rem;
   vertical-align: middle;
 }
 
 .subtitle {
   margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2.25rem;
   font-family: "Roboto Mono", monospace;
   color: rgba(255, 255, 255, 0.769);
   font-size: 1.25em;
+}
+
+.centered {
+  text-align: center;
+}
+
+.highlight {
+  color: #000000;
+  background-color: #ffff00;
+}
+
+.pt1 {
+  padding-top: 1rem;
 }
