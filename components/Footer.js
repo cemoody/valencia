@@ -17,6 +17,17 @@ const Footer = () => {
         setEmail("");
       }
     });
+    const checkUser = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        console.log(user);
+        setEmail(user.attributes.email);
+        return user;
+      } catch (err) {
+        return err;
+      }
+    };
+    checkUser();
   }, []);
   return email !== "" ? (
     <div className="text">Logged in as: {email}</div>

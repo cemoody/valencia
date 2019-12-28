@@ -1,8 +1,7 @@
 import React, { useState, useReducer } from "react";
 import { Auth } from "aws-amplify";
-import { Icon, Loader, Dimmer } from "semantic-ui-react";
+import { Loader, Dimmer } from "semantic-ui-react";
 import awsconfig from "../src/aws-exports"; // if you are using Amplify CLI
-import Head from "next/head";
 import Footer from "../components/Footer";
 
 Auth.configure(awsconfig);
@@ -30,41 +29,6 @@ const AuthForm = props => {
   console.log({ formState, loading });
   return (
     <div style={styles.container}>
-      <Head>
-        <title>algopipes</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
-          rel="stylesheet"
-        ></link>
-        <link
-          rel="stylesheet"
-          href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
-        />
-        <link href="/index.css" rel="stylesheet" />
-      </Head>
-      <div id="main">
-        <div id="inner">
-          <div>
-            <span className="logoicon">
-              <Icon fitted name="cubes" size="huge" inverted />
-            </span>
-            <span className="title fs25"> algopipes </span>
-            <p />
-            <span className="subtitle">
-              Create a search page from your embeddings.
-              <span className="highlight"> Free. </span>
-            </span>
-            <p />
-            <p />
-            <p />
-          </div>
-        </div>
-      </div>
-      {/*
-      <div style={styles.text}>
-        <span className="text"> Sign in or sign up below. </span>
-      </div>*/}
       <input
         name="email"
         onChange={e => {
@@ -103,7 +67,6 @@ const AuthForm = props => {
         </Dimmer>
         Get In
       </button>
-      <Footer />
     </div>
   );
 };
@@ -112,7 +75,7 @@ const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    marginTop: 150,
+    marginTop: 50,
     justifyContent: "center",
     alignItems: "center"
   },

@@ -1,18 +1,44 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Icon, Button, Label } from "semantic-ui-react";
-import Amplify, { Auth } from "aws-amplify";
+import Amplify, { Auth, Hub } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
+
+import { listenUser } from "../src/utils";
+import Logo from "../components/Logo";
+import UploadFile from "../components/UploadFile";
+import AuthForm from "../components/AuthForm";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
 
 const Home = () => {
-  const [authState, setAuthState] = useState(false);
-  Auth.currentAuthenticatedUser()
-    .then(user => setAuthState(true))
-    .catch(err => setAuthState(false));
-  console.log({ authState });
+  const [email, setEmail] = useState("");
+  useEffect(() => {
+    Hub.listen("auth", data => {
+      const { payload } = data;
+      const email = payload.data.attributes.email;
+      console.log("A new auth event has happened: ", data);
+      if (payload.event === "signIn") {
+        setEmail(email);
+      }
+      if (payload.event === "signOut") {
+        setEmail("");
+      }
+    });
+    const checkUser = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        console.log(user);
+        setEmail(user.attributes.email);
+        return user;
+      } catch (err) {
+        return err;
+      }
+    };
+    checkUser();
+  }, []);
+  console.log({ email });
 
   return (
     <div>
@@ -32,34 +58,8 @@ const Home = () => {
       <div id="wrapper">
         <div id="main">
           <div id="inner">
-            <div>
-              <span className="logoicon">
-                <Icon fitted name="cubes" size="huge" inverted />
-              </span>
-              <span className="title fs25"> algopipes </span>
-              <p />
-              <span className="subtitle">
-                Create a search page from your embeddings.
-                <span className="highlight"> Free. </span>
-              </span>
-              <p />
-              <p />
-              <p />
-              <div className="centered pt1">
-                <Button
-                  as="div"
-                  labelPosition="right"
-                  onClick={() => Auth.federatedSignIn()}
-                >
-                  <Button icon>
-                    <Icon name="cloud upload" />
-                  </Button>
-                  <Label as="a" basic pointing="left">
-                    Upload dataframe
-                  </Label>
-                </Button>
-              </div>
-            </div>
+            <Logo size="huge" />
+            {email === "" ? <AuthForm /> : <UploadFile />}
           </div>
         </div>
       </div>

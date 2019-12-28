@@ -23,6 +23,10 @@ body {
   background-color: #1c76b8;
 }
 
+.logoicon {
+  margin-right: 1rem;
+}
+
 #inner {
   padding: 3.5rem 1rem;
   max-width: 100%;
