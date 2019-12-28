@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"valenciad2b24e8e": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}

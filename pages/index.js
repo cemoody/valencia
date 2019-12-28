@@ -1,8 +1,9 @@
 import React from "react";
 import Head from "next/head";
 import { Icon, Button, Label } from "semantic-ui-react";
-import Amplify from "aws-amplify";
+import Amplify, { Auth } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
+import { withAuthenticator } from "aws-amplify-react"; // or 'aws-amplify-react-native';
 
 Amplify.configure(awsconfig);
 
@@ -54,4 +55,4 @@ const Home = () => (
   </div>
 );
 
-export default Home;
+export default withAuthenticator(Home);
