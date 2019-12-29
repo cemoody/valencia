@@ -30,7 +30,9 @@ const Footer = () => {
     checkUser();
   }, []);
   return email !== "" ? (
-    <div className="text">Logged in as: {email}</div>
+    <div className="footer">
+      <div className="text">Logged in as: {email}</div>
+    </div>
   ) : null;
 };
 

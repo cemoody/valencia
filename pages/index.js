@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import { Icon, Button, Label } from "semantic-ui-react";
 import Amplify, { Auth, Hub } from "aws-amplify";
 import awsconfig from "../src/aws-exports";
 
-import { listenUser } from "../src/utils";
 import Logo from "../components/Logo";
 import UploadFile from "../components/UploadFile";
 import AuthForm from "../components/AuthForm";
+import Footer from "../components/Footer";
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -18,13 +17,13 @@ const Home = () => {
   useEffect(() => {
     Hub.listen("auth", data => {
       const { payload } = data;
-      const email = payload.data.attributes.email;
-      console.log("A new auth event has happened: ", data);
-      if (payload.event === "signIn") {
-        setEmail(email);
-      }
-      if (payload.event === "signOut") {
-        setEmail("");
+      try {
+        const email = payload.data.attributes.email;
+        console.log("A new auth event has happened: ", data);
+        if (payload.event === "signIn") setEmail(email);
+        if (payload.event === "signOut") setEmail("");
+      } catch (err) {
+        console.log(err);
       }
     });
     const checkUser = async () => {
@@ -63,6 +62,7 @@ const Home = () => {
           <div id="inner">
             <Logo size="huge" />
             {email === "" ? checked ? <AuthForm /> : null : <UploadFile />}
+            <Footer />
           </div>
         </div>
       </div>
