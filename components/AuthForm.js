@@ -2,6 +2,9 @@ import React, { useState, useReducer } from "react";
 
 import { Auth } from "aws-amplify";
 
+// from https://dev.to/dabit3/the-complete-guide-to-user-authentication-with-the-amplify-framework-2inh
+// and the git repo https://github.com/dabit3/amplify-auth-demo
+
 const initialFormState = {
   password: "",
   email: "",
