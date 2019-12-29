@@ -3,6 +3,14 @@ import React, { useEffect, useState } from "react";
 import awsconfig from "../src/aws-exports"; // if you are using Amplify CLI
 Auth.configure(awsconfig);
 
+function signOut() {
+  Auth.signOut()
+    .then(data => {
+      console.log("signed out: ", data);
+    })
+    .catch(err => console.log(err));
+}
+
 const Footer = () => {
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -31,7 +39,12 @@ const Footer = () => {
   }, []);
   return email !== "" ? (
     <div className="footer">
-      <div className="text">Logged in as: {email}</div>
+      <div className="text">
+        Logged in as: {email}.{" "}
+        <span className="anchor" onClick={signOut}>
+          Sign out.
+        </span>
+      </div>
     </div>
   ) : null;
 };

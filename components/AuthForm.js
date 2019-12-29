@@ -87,14 +87,16 @@ export default function AuthForm() {
     <div>
       <div>{renderForm(formState)}</div>
       {formType === "signUp" && (
-        <p style={styles.footer}>
+        <p className="text">
+          Already have an account?{" "}
           <span style={styles.anchor} onClick={() => updateFormType("signIn")}>
             Sign In
           </span>
         </p>
       )}
       {formType === "signIn" && (
-        <p style={styles.footer}>
+        <p className="text">
+          Need an account?{" "}
           <span style={styles.anchor} onClick={() => updateFormType("signUp")}>
             Sign Up
           </span>
@@ -127,7 +129,7 @@ function SignUp(props) {
         placeholder="password"
       />
       <button onClick={props.signUp} className="buttonHighlight">
-        Get In
+        Sign Up
       </button>
     </div>
   );
@@ -155,7 +157,7 @@ function SignIn(props) {
         style={styles.input}
         placeholder="password"
       />
-      <button style={styles.button} onClick={props.signIn}>
+      <button onClick={props.signIn} className="buttonHighlight">
         Sign In
       </button>
     </div>
@@ -231,7 +233,9 @@ const styles = {
     color: "rgba(0, 0, 0, 0.6)"
   },
   anchor: {
-    color: "#006bfc",
-    cursor: "pointer"
+    color: "#ffff00",
+    cursor: "pointer",
+    fontFamily: "Roboto Mono",
+    textDecoration: "underline"
   }
 };

@@ -101,3 +101,10 @@ body {
   bottom: 0;
   width: 100%;
 }
+
+.anchor {
+  color: #ffff00;
+  cursor: pointer;
+  font-family: "Roboto Mono";
+  text-decoration: underline;
+}
