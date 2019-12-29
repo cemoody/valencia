@@ -2,7 +2,6 @@ import React, { useState, useReducer } from "react";
 import { Auth } from "aws-amplify";
 import { Loader, Dimmer } from "semantic-ui-react";
 import awsconfig from "../src/aws-exports"; // if you are using Amplify CLI
-import Footer from "../components/Footer";
 
 Auth.configure(awsconfig);
 
@@ -13,13 +12,23 @@ const initialFormState = {
   confirmationCode: ""
 };
 
-async function signIn(username, password) {
+async function signInOrUp(username, password) {
   try {
     console.log(username, password);
     const ret = await Auth.signIn(username, password);
     console.log("sign in success!", ret);
   } catch (err) {
-    console.log("error signing up..", err);
+    console.log("error signing in, will try sign up", err);
+    try {
+      const ret = await Auth.signUp({
+        username,
+        password,
+        attributes: { email: username }
+      });
+      console.log("sign up success!", ret);
+    } catch (err) {
+      console.log("error signing up", err);
+    }
   }
 }
 
@@ -58,7 +67,7 @@ const AuthForm = props => {
         className="buttonHighlight"
         onClick={() => {
           setLoading(true);
-          signIn(formState.email, formState.password);
+          signInOrUp(formState.email, formState.password);
           setLoading(false);
         }}
       >

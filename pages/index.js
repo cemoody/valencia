@@ -14,6 +14,7 @@ Auth.configure(awsconfig);
 
 const Home = () => {
   const [email, setEmail] = useState("");
+  const [checked, setChecked] = useState(false);
   useEffect(() => {
     Hub.listen("auth", data => {
       const { payload } = data;
@@ -29,10 +30,12 @@ const Home = () => {
     const checkUser = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
+        setChecked(true);
         console.log(user);
         setEmail(user.attributes.email);
         return user;
       } catch (err) {
+        setChecked(true);
         return err;
       }
     };
@@ -59,7 +62,7 @@ const Home = () => {
         <div id="main">
           <div id="inner">
             <Logo size="huge" />
-            {email === "" ? <AuthForm /> : <UploadFile />}
+            {email === "" ? checked ? <AuthForm /> : null : <UploadFile />}
           </div>
         </div>
       </div>
