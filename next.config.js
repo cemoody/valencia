@@ -39,6 +39,9 @@ module.exports = withCSS({
             //
             // The lines below blacklist webpack itself (that cannot be put on
             // externals) and `former-kit-skin-pagarme`.
+            if (res.match(/amplify.*/)) {
+              return callback(null, `commonjs ${request}`);
+            }
             if (
               res.match(/node_modules[/\\].*\.js/) &&
               !res.match(/node_modules[/\\]webpack/) &&
@@ -46,12 +49,15 @@ module.exports = withCSS({
             ) {
               return callback(null, `commonjs ${request}`);
             }
-
             callback();
           }
         );
       });
     }
+
     return config;
+  },
+  watchOptions: {
+    ignored: /amplify.*/
   }
 });

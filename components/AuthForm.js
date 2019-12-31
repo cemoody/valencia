@@ -38,9 +38,9 @@ async function confirmSignUp({ email, confirmationCode }, updateFormType) {
   }
 }
 
-async function signIn({ username, password }) {
+async function signIn({ email, password }) {
   try {
-    await Auth.signIn(username, password);
+    await Auth.signIn(email, password);
     console.log("sign in success!");
   } catch (err) {
     console.log("error signing up..", err);
@@ -142,13 +142,13 @@ function SignIn(props) {
   return (
     <div style={styles.container}>
       <input
-        name="username"
+        name="email"
         onChange={e => {
           e.persist();
           props.updateFormState(e);
         }}
         style={styles.input}
-        placeholder="username"
+        placeholder="email"
       />
       <input
         type="password"

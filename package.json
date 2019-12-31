@@ -10,13 +10,9 @@
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "aws-amplify": "2.2.1-unstable.16",
-    "aws-amplify-react": "3.1.2-unstable.16",
     "next": "9.1.6",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "semantic-ui-react": "^0.88.2"
-  },
-  "devDependencies": {
-    "babel-plugin-transform-object-rest-spread": "^6.26.0"
   }
 }
