@@ -34,21 +34,8 @@ const UploadFile = () => {
   return (
     <div style={styles.container}>
       <div className="centered pt1">
-        <Button
-          as="div"
-          labelPosition="right"
-          onClick={() => fileInputRef.current.click()}
-        >
-          <Button icon>
-            <Icon name="cloud upload" />
-          </Button>
-          <Label as="a" basic pointing="left">
-            Upload dataframe
-          </Label>
-        </Button>
-        <input ref={fileInputRef} type="file" hidden onChange={fileChange} />
         {progress > 1 ? (
-          <Segment>
+          <div>
             <p />
             <Progress
               percent={progress.toFixed(1)}
@@ -56,7 +43,31 @@ const UploadFile = () => {
               progress={active}
               indicating={active}
             ></Progress>
-          </Segment>
+          </div>
+        ) : (
+          <div>
+            <Button
+              as="div"
+              labelPosition="right"
+              onClick={() => fileInputRef.current.click()}
+            >
+              <Button icon>
+                <Icon name="cloud upload" />
+              </Button>
+              <Label as="a" basic pointing="left">
+                Upload dataframe
+              </Label>
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              hidden
+              onChange={fileChange}
+            />
+          </div>
+        )}
+        {progress > 99 ? (
+          <p>Upload complete. Click here to see dataframe.</p>
         ) : null}
       </div>
     </div>
