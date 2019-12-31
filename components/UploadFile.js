@@ -1,5 +1,12 @@
-import React from "react";
-import { Icon, Button, Label } from "semantic-ui-react";
+import React, { useState } from "react";
+import {
+  Icon,
+  Button,
+  Label,
+  Container,
+  Progress,
+  Segment
+} from "semantic-ui-react";
 import { Auth, Storage } from "aws-amplify";
 import awsconfig from "../src/aws-exports"; // if you are using Amplify CLI
 
@@ -7,17 +14,23 @@ Auth.configure(awsconfig);
 Storage.configure(awsconfig, { level: "private" });
 let fileInputRef = React.createRef();
 
-const fileChange = e => {
-  const file = e.target.files[0];
-  const filename = file.name;
-  Storage.put(filename, file, {
-    contentType: "application/x-binary"
-  })
-    .then(result => console.log(result))
-    .catch(err => console.log(err));
-};
-
 const UploadFile = () => {
+  const [progress, setProgress] = useState(0);
+  const active = progress > 1 && progress < 99;
+  console.log({ progress, active });
+  const fileChange = e => {
+    const file = e.target.files[0];
+    const filename = file.name;
+    Storage.put(filename, file, {
+      level: "private",
+      contentType: "application/x-binary",
+      progressCallback(progress) {
+        setProgress((100.0 * progress.loaded) / progress.total);
+      }
+    })
+      .then(result => console.log(result))
+      .catch(err => console.log(err));
+  };
   return (
     <div style={styles.container}>
       <div className="centered pt1">
@@ -34,6 +47,17 @@ const UploadFile = () => {
           </Label>
         </Button>
         <input ref={fileInputRef} type="file" hidden onChange={fileChange} />
+        {progress > 1 ? (
+          <Segment>
+            <p />
+            <Progress
+              percent={progress.toFixed(1)}
+              active={active}
+              progress={active}
+              indicating={active}
+            ></Progress>
+          </Segment>
+        ) : null}
       </div>
     </div>
   );
