@@ -11,6 +11,12 @@ src/serve/click_default_group.py
 src/serve/LICENSE.md
 .next
 
+# ignore credentials as they appear
+*credentials*
+*/*credentials*
+*/*/*credentials*
+*/*/*/*credentials*
+
 #amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*

@@ -18,17 +18,26 @@ def handler(event, context):
     print(json.dumps(event))
     bucket = event["bucket"]
     key = event["key"]
-    fn = os.path.filename(key)
+    print(bucket, key)
+    fn = os.path.basename(key)
     s3.download_file(bucket, key, fn)
+    print(bucket, key)
+    error = True
     with open("log", "w") as log:
         try:
             index, catalog = run(fn, log)
+            error = False
         except Exception as e:
-            log.write(e + "\n")
-    s3.upload_file(index, bucket, f"{fn}.index")
-    s3.upload_file(catalog, bucket, f"{fn}.db")
-    s3.upload_file("log", bucket, f"{fn}.log")
-    return {}
+            log.write(str(e) + "\n")
+    logs = open("log", "r").read()
+    print("Execution logs:")
+    print(logs)
+    if not error:
+        s3.upload_file(index, bucket, f"{key}.index")
+        s3.upload_file(catalog, bucket, f"{key}.db")
+        s3.upload_file("log", bucket, f"{key}.log")
+    codes = {True: "error", False: "success"}
+    return {"status": codes[error], "log": logs, "key": key}
 
 
 def run(fn, log):
@@ -98,12 +107,13 @@ def to_df(fn, log):
     read_funcs = [pd.read_csv, pd.read_json, pd.read_sql]
     for func in read_funcs:
         try:
-            log.write(f"Trying to read using {func.__name__}\n")
+            log.write(f"\nTrying to read using {func.__name__}\n")
             df = func(fn)
             assert len(df) > 1, "Rejected dataset because fewer than 2 rows were found"
             assert (
                 len(df.columns) > 1
             ), "Rejected dataset because fewer than 2 columns were found"
+            log.write(f"\nSucceeded reading dataframe using {func.__name__}\n")
             return df
         except Exception as e:
             msg = (
@@ -118,5 +128,11 @@ def to_df(fn, log):
 
 
 if __name__ == "__main__":
-    with open("log", "w") as log:
-        run(sys.argv[-1], log)
+    event = {
+        "bucket": "valenciauserstorage163901-prod",
+        "key": "private/us-east-2:03e6c35f-0e7a-4cc3-91db-acf79ce94f28/Screen Shot 2019-12-22 at 9.23.50 AM.png",
+    }
+    # with open("log", "w") as log:
+    #     run(sys.argv[-1], log)
+    ret = handler(event, {})
+    print(ret)
