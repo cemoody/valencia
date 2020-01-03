@@ -22,7 +22,7 @@ Make a python lambda layer:
     mkdir -p temp/python
     cd temp
     # These libs you need zipped up
-    pip install --no-deps numpy pandas setuptools pybind11 pytz python-dateutil boto3 six urllib3 jmespath -t python
+    pip install --no-deps numpy pandas setuptools pybind11 pytz python-dateutil boto3 six urllib3 jmespath datasette typing_extensions -t python
 
     # These libs you need temporarily to build hnswlib
     pip install setuptools
@@ -34,6 +34,12 @@ Make a python lambda layer:
     python setup.py install --root=/serve/temp/python
     cp -rd /serve/temp/python/var/lang/lib/python3.7/site-packages/* /serve/temp/python/
     cd /serve/temp/
+
+    # Trim the package down
+    rm -rdf python/pandas/*tests*
+    rm -rdf python/var
+
+    # Zip it up
     zip -r pandas-025-numpy-018-hnswlib.zip .
 
 To run `indexer.py` to interactively debug:

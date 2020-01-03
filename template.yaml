@@ -23,6 +23,8 @@ Resources:
             Path: /{proxy+}
             Method: ANY
             RestApiId: !Ref Api
+      Layers:
+        - arn:aws:lambda:us-east-2:179870984089:layer:pandas-025-pybind11-setuptools:5
   Api:
     Type: AWS::Serverless::Api
     Properties:
@@ -108,7 +110,7 @@ Resources:
         - AWSXrayWriteOnlyAccess
         - AmazonS3FullAccess
       Layers:
-        - arn:aws:lambda:us-east-2:179870984089:layer:pandas-025-pybind11-setuptools:4
+        - arn:aws:lambda:us-east-2:179870984089:layer:pandas-025-pybind11-setuptools:5
 Parameters:
   StackTagName:
     Type: String
