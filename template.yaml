@@ -9,7 +9,7 @@ Resources:
         - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
         - ResourceName: serve
       CodeUri: src/serve
-      Handler: handler.handler
+      Handler: serve.handler
       Runtime: python3.7
       MemorySize: 3008
       Timeout: 30
@@ -73,7 +73,7 @@ Resources:
                 - Athorization
                 - Content-Type
               QueryString: true
-            PathPattern: "/*"
+            PathPattern: /*
             TargetOriginId: originapi
             ViewerProtocolPolicy: redirect-to-https
         DefaultCacheBehavior:
@@ -82,15 +82,30 @@ Resources:
           ViewerProtocolPolicy: redirect-to-https
           TargetOriginId: originapi
         Origins:
-            - DomainName: !Sub '${Api}.execute-api.${AWS::Region}.amazonaws.com'
-              Id: originapi
-              CustomOriginConfig:
-                OriginProtocolPolicy: https-only
-                OriginSSLProtocols: 
-                  - TLSv1.2
-                  - TLSv1.1
-                  - TLSv1
-              OriginPath: !Sub '/${EnvironmentTagName}'
+          - DomainName: !Sub ${Api}.execute-api.${AWS::Region}.amazonaws.com
+            Id: originapi
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+                - TLSv1.1
+                - TLSv1
+            OriginPath: !Sub /${EnvironmentTagName}
+  indexer:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-indexer
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: indexer
+      CodeUri: src/serve
+      Handler: indexer.handler
+      Runtime: python3.7
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
 Parameters:
   StackTagName:
     Type: String
