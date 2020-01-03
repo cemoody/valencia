@@ -14,6 +14,11 @@ from mangum.exceptions import ASGIWebSocketCycleException
 from mangum.connections import ConnectionTable, __ERR__
 
 
+class str2(str):
+    def decode(self, *args):
+        return self
+
+
 def get_server_and_client(event: dict) -> typing.Tuple:  # pragma: no cover
     """
     Parse the server and client for the scope definition, if possible.
@@ -98,6 +103,9 @@ class Mangum:
             "asgi": {"version": "3.0"},
             "aws": {"event": event, "context": context},
         }
+
+        path = str2(scope["path"] + "")
+        scope["path"] = path
 
         is_binary = event.get("isBase64Encoded", False)
         body = event["body"] or b""
