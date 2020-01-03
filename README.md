@@ -21,8 +21,20 @@ Make a python lambda layer:
     cd /serve
     mkdir -p temp/python
     cd temp
-    pip install --no-deps pandas setuptools pybind11 pytz python-dateutil -t python
-    zip -r pandas-0.25-pybind11-setuptools.zip .
+    # These libs you need zipped up
+    pip install --no-deps numpy pandas setuptools pybind11 pytz python-dateutil boto3 six urllib3 jmespath -t python
+
+    # These libs you need temporarily to build hnswlib
+    pip install setuptools
+    pip install pybind11
+    yum install git
+    git clone https://github.com/nmslib/hnswlib.git
+    cd hnswlib/python_bindings
+    export PYTHONPATH=/serve/temp/python/
+    python setup.py install --root=/serve/temp/python
+    cp -rd /serve/temp/python/var/lang/lib/python3.7/site-packages/* /serve/temp/python/
+    cd /serve/temp/
+    zip -r pandas-025-numpy-018-hnswlib.zip .
 
 To run `indexer.py` to interactively debug:
 

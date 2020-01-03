@@ -60,7 +60,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-valencia-prod-163901-deployment",
-					"S3Key": "amplify-builds/S3Trigger318fe02e-41544146463655464551-build.zip"
+					"S3Key": "amplify-builds/S3Trigger318fe02e-614d7a3275356d577458-build.zip"
 				}
 			}
 		},

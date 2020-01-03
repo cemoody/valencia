@@ -106,6 +106,9 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+        - AmazonS3FullAccess
+      Layers:
+        - arn:aws:lambda:us-east-2:179870984089:layer:pandas-025-pybind11-setuptools:4
 Parameters:
   StackTagName:
     Type: String

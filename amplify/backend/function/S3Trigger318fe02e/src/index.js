@@ -1,6 +1,8 @@
 var AWS = require("aws-sdk");
-console.log(AWS.EC2.apiVersions);
-var lambda = new AWS.Lambda();
+AWS.config.region = "us-east-2";
+var lambda = new aws.Lambda({
+  region: "us-east-2" //change to your region
+});
 
 exports.handler = function(event, context) {
   //eslint-disable-line
@@ -15,14 +17,15 @@ exports.handler = function(event, context) {
     FunctionName: "valencia-prod-indexer",
     ClientContext: "e30=",
     InvocationType: "RequestResponse",
-    LogType: "None",
+    LogType: "Tail",
     Payload: blob
   };
-  console.log("invoking lambda", params); // SUCCESS with message
+  console.log("invoking lambda", params);
   lambda.invoke(params, function(err, data) {
     if (err) console.log(err, err.stack);
     // an error occurred
     else console.log(data); // successful response
   });
-  context.done(null, "Successfully processed S3 event"); // SUCCESS with message
+  console.log("invoked lambda", params);
+  context.done(null, "Successfully processed S3 event");
 };

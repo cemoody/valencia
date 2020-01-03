@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import hnswlib
 import sqlite3
-from contextlib import redirect_stdout
+from urllib.parse import unquote_plus
 
 
 s3 = boto3.client("s3")
@@ -16,26 +16,27 @@ s3 = boto3.client("s3")
 def handler(event, context):
     # Log the event argument for debugging and for use in local development.
     print(json.dumps(event))
-    bucket = event["bucket"]
-    key = event["key"]
+    bucket = event["Records"][0]["s3"]["bucket"]["name"]
+    key = unquote_plus(event["Records"][0]["s3"]["object"]["key"])
     print(bucket, key)
-    fn = os.path.basename(key)
+    fn = f"/tmp/{os.path.basename(key)}"
     s3.download_file(bucket, key, fn)
     print(bucket, key)
     error = True
-    with open("log", "w") as log:
+    with open("/tmp/.log", "w") as log:
         try:
             index, catalog = run(fn, log)
             error = False
         except Exception as e:
             log.write(str(e) + "\n")
-    logs = open("log", "r").read()
+    logs = open("/tmp/.log", "r").read()
     print("Execution logs:")
     print(logs)
     if not error:
         s3.upload_file(index, bucket, f"{key}.index")
         s3.upload_file(catalog, bucket, f"{key}.db")
-        s3.upload_file("log", bucket, f"{key}.log")
+        s3.upload_file("/tmp/.log", bucket, f"{key}.log")
+    try_remove(f"{key}.db")
     codes = {True: "error", False: "success"}
     return {"status": codes[error], "log": logs, "key": key}
 
@@ -76,12 +77,22 @@ def find_cols(df, log):
     return names
 
 
+def try_remove(fn):
+    try:
+        os.remove(fn)
+    except:
+        pass
+
+
 def make_sqlite(df, fn, log):
     t0 = time.time()
-    cnx = sqlite3.connect(f"{fn}.db")
+    out = f"{fn}.db"
+    try_remove(out)
+    cnx = sqlite3.connect(out)
     df.to_sql(name="catalog", con=cnx)
     t1 = time.time()
     log.write(f"Constructed sqlite tables in {(t1 - t0):1.1f}s\n")
+    return out
 
 
 def make_index(df, fn, log):
@@ -94,9 +105,11 @@ def make_index(df, fn, log):
     mdl.init_index(max_elements=n_rows, ef_construction=200, M=16)
     t0 = time.time()
     mdl.add_items(vec, labels)
-    mdl.save_index(f"{fn}.index")
+    out = f"{fn}.index"
+    mdl.save_index(out)
     t1 = time.time()
     log.write(f"Constructed index in {(t1 - t0):1.1f}s\n")
+    return out
 
 
 def to_df(fn, log):
