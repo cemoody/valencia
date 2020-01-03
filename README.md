@@ -15,6 +15,15 @@ Building python env
     cd python_bindings
     python setup.py install --root=/serve
 
+Make a python lambda layer:
+
+    docker run -v /Users/chris/code/valencia/src/serve:/serve -it lambci/lambda:build-python3.7 /bin/bash
+    cd /serve
+    mkdir -p temp/python
+    cd temp
+    pip install --no-deps pandas setuptools pybind11 pytz python-dateutil -t python
+    zip -r pandas-0.25-pybind11-setuptools.zip .
+
 To run `indexer.py` to interactively debug:
 
     cp ln -s ~/.aws/credentials ~/code/valencia/src/serve

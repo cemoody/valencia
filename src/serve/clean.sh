@@ -11,7 +11,6 @@ rm -rdf hupper/
 rm -rdf importlib_metadata/
 rm -rdf include/
 rm -rdf jinja2/
-rm -rdf mangum/
 rm -rdf markupsafe/
 rm -rdf more_itertools/
 rm -rdf numpy/
@@ -27,4 +26,5 @@ rm -rdf websockets/
 rm -rdf websockets/
 rm -rdf hnswlib*
 rm -rdf __pycache__/
+rm easy_install.py
 rm six*py zipp*py typing_extensions*py click_def*py 
