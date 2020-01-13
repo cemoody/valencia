@@ -43,8 +43,8 @@ def handler(event, context):
 
 def run(fn, log):
     df = to_df(fn, log)
-    index = make_index(df, fn, log)
     catalog = make_sqlite(df, fn, log)
+    index = make_index(df, fn, log)
     return index, catalog
 
 
@@ -112,12 +112,28 @@ def make_index(df, fn, log):
     return out
 
 
+def read_sqlite(fn):
+    """ Read a sqlite database and return the first table as
+    a dataframe.
+    >>> df = read_sqlite('chinook.db')
+    >>> df.head(1)
+    AlbumId                                  Title  ArtistId
+    0        1  For Those About To Rock We Salute You         1
+    """
+    conn = sqlite3.connect(fn)
+    query = "select name from sqlite_master where type = 'table'"
+    tables = pd.read_sql_query(query, conn)
+    table = tables.values[0][0]
+    df = pd.read_sql_query(f"select * from {table}", conn)
+    return df
+
+
 def to_df(fn, log):
     """ Try different pandas dataframe readers validate
     some reasonable expectations and yield errors back to
     the user.
     """
-    read_funcs = [pd.read_csv, pd.read_json, pd.read_sql]
+    read_funcs = [pd.read_csv, pd.read_json, pd.read_sql, read_sqlite]
     for func in read_funcs:
         try:
             log.write(f"\nTrying to read using {func.__name__}\n")
